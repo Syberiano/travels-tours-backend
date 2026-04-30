@@ -1,0 +1,12 @@
+package com.travels.backend.repository;
+
+import com.travels.backend.model.Contact;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ContactRepository extends JpaRepository<Contact, Long> {
+    List<Contact> findByResolved(Boolean resolved);
+}
