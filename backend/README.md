@@ -283,6 +283,3 @@ Se implementó logging con SLF4J en todos los servicios y controladores para fac
 
 Sistema desarrollado con Spring Boot 4.0.6 y Java 17
 
-## Licencia
-
-MIT
