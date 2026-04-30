@@ -281,8 +281,7 @@ Se implementó logging con SLF4J en todos los servicios y controladores para fac
 
 ## Autor
 
-Sistema desarrollado con Spring Boot 4.0.6 y Java 17
 
-## Licencia
-
-MIT
+Juan David Silva
+Jhon Correa
+Kevin Rios
