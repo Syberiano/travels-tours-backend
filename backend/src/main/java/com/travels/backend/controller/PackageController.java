@@ -2,6 +2,8 @@ package com.travels.backend.controller;
 
 import com.travels.backend.dto.PackageDTO;
 import com.travels.backend.dto.PackageRequestDTO;
+import com.travels.backend.exception.ResourceNotFoundException;
+import com.travels.backend.model.PackageStatus;
 import com.travels.backend.model.UserRole;
 import com.travels.backend.service.PackageService;
 import com.travels.backend.util.SecurityUtil;
@@ -36,6 +38,11 @@ public class PackageController {
     public ResponseEntity<PackageDTO> getPackageById(@PathVariable Long id) {
         log.info("Obteniendo paquete con ID: {}", id);
         var travelPackage = packageService.getPackageById(id);
+        // Solo devolver paquetes aprobados a usuarios no autenticados
+        if (!travelPackage.getStatus().equals(PackageStatus.APPROVED) &&
+            !SecurityUtil.isCurrentUserAdmin()) {
+            throw new ResourceNotFoundException("Paquete no encontrado");
+        }
         return ResponseEntity.ok(packageService.convertToDTO(travelPackage));
     }
 

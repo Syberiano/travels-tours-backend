@@ -3,6 +3,7 @@ package com.travels.backend.controller;
 import com.travels.backend.model.Event;
 import com.travels.backend.model.EventType;
 import com.travels.backend.service.EventService;
+import com.travels.backend.service.PackageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class AnalyticsController {
 
     private final EventService eventService;
+    private final PackageService packageService;
 
     @PostMapping("/packages/{packageId}/click")
     public ResponseEntity<Event> recordPackageClick(
@@ -30,9 +32,11 @@ public class AnalyticsController {
             HttpServletRequest request) {
         log.info("Registrando click en paquete: {}", packageId);
 
+        var travelPackage = packageService.getPackageById(packageId);
+
         Event event = eventService.recordEvent(
                 EventType.CLICK,
-                packageId,
+                travelPackage,
                 null,
                 request.getRemoteAddr(),
                 request.getHeader("User-Agent")
