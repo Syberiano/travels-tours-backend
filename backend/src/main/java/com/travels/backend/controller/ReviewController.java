@@ -4,6 +4,7 @@ import com.travels.backend.dto.ReviewDTO;
 import com.travels.backend.dto.ReviewRequestDTO;
 import com.travels.backend.service.ReviewService;
 import com.travels.backend.util.SecurityUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Reseñas", description = "Reseñas de paquetes por clientes; consultas públicas por paquete")
 public class ReviewController {
 
     private final ReviewService reviewService;

@@ -3,6 +3,7 @@ package com.travels.backend.controller;
 import com.travels.backend.dto.ContactDTO;
 import com.travels.backend.dto.ContactRequestDTO;
 import com.travels.backend.service.ContactService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/contacts")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Contacto", description = "Formulario público y gestión de mensajes (ADMIN)")
 public class ContactController {
 
     private final ContactService contactService;

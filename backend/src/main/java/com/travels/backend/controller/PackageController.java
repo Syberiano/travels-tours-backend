@@ -7,6 +7,7 @@ import com.travels.backend.model.PackageStatus;
 import com.travels.backend.model.UserRole;
 import com.travels.backend.service.PackageService;
 import com.travels.backend.util.SecurityUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/packages")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Paquetes turísticos", description = "CRUD de paquetes, aprobación (ADMIN) y listados públicos")
 public class PackageController {
 
     private final PackageService packageService;

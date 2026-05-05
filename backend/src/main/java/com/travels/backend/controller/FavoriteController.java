@@ -3,6 +3,7 @@ package com.travels.backend.controller;
 import com.travels.backend.dto.FavoriteDTO;
 import com.travels.backend.service.FavoriteService;
 import com.travels.backend.util.SecurityUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/favorites")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Favoritos", description = "Paquetes favoritos del cliente autenticado")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;

@@ -22,6 +22,7 @@ import com.travels.backend.model.UserRole;
 import com.travels.backend.service.BookingService;
 import com.travels.backend.util.SecurityUtil;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/bookings")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Reservas", description = "Reservas de clientes y gestión por asesores/admin")
 public class BookingController {
 
     private final BookingService bookingService;

@@ -21,6 +21,7 @@ import com.travels.backend.model.UserRole;
 import com.travels.backend.service.UserService;
 import com.travels.backend.util.SecurityUtil;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Usuarios", description = "Perfiles y administración de usuarios (mayoría requiere rol ADMIN)")
 public class UserController {
 
     private final UserService userService;

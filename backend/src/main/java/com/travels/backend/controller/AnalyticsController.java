@@ -5,6 +5,7 @@ import com.travels.backend.model.Event;
 import com.travels.backend.model.EventType;
 import com.travels.backend.service.EventService;
 import com.travels.backend.service.PackageService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.util.Map;
 @RequestMapping("/api/analytics")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Analítica", description = "Eventos, clics, vistas y métricas por paquete")
 public class AnalyticsController {
 
     private static final DateTimeFormatter[] EVENT_DATE_TIME_FORMATTERS = {

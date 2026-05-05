@@ -5,6 +5,7 @@ import com.travels.backend.dto.BlogRequestDTO;
 import com.travels.backend.exception.ResourceNotFoundException;
 import com.travels.backend.service.BlogService;
 import com.travels.backend.util.SecurityUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/blogs")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Blogs", description = "Artículos: creación por asesores, aprobación por admin, lectura pública aprobada")
 public class BlogController {
 
     private final BlogService blogService;
