@@ -2,6 +2,7 @@ package com.travels.backend.controller;
 
 import com.travels.backend.dto.BlogDTO;
 import com.travels.backend.dto.BlogRequestDTO;
+import com.travels.backend.exception.ResourceNotFoundException;
 import com.travels.backend.service.BlogService;
 import com.travels.backend.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +38,9 @@ public class BlogController {
     public ResponseEntity<BlogDTO> getBlogById(@PathVariable Long id) {
         log.info("Obteniendo blog con ID: {}", id);
         var blog = blogService.getBlogById(id);
+        if (!blogService.isVisibleToViewer(blog)) {
+            throw new ResourceNotFoundException("Blog no encontrado");
+        }
         blogService.incrementViewCount(id);
         return ResponseEntity.ok(blogService.convertToDTO(blog));
     }

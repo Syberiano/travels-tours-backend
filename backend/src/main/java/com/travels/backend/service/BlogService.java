@@ -6,6 +6,7 @@ import com.travels.backend.exception.InvalidOperationException;
 import com.travels.backend.exception.ResourceNotFoundException;
 import com.travels.backend.model.*;
 import com.travels.backend.repository.BlogRepository;
+import com.travels.backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,23 @@ public class BlogService {
     public Blog getBlogById(Long id) {
         return blogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Blog no encontrado con ID: " + id));
+    }
+
+    /**
+     * Blogs no aprobados solo los ve el autor o un ADMIN; el público anónimo solo ve APPROVED.
+     */
+    public boolean isVisibleToViewer(Blog blog) {
+        if (blog.getStatus().equals(ContentStatus.APPROVED)) {
+            return true;
+        }
+        var viewer = SecurityUtil.getCurrentUser();
+        if (viewer == null) {
+            return false;
+        }
+        if (viewer.getRole().equals(UserRole.ADMIN)) {
+            return true;
+        }
+        return blog.getAuthor().getId().equals(viewer.getId());
     }
 
     public List<Blog> getAllBlogs() {

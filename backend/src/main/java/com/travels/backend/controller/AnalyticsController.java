@@ -1,5 +1,6 @@
 package com.travels.backend.controller;
 
+import com.travels.backend.exception.InvalidOperationException;
 import com.travels.backend.model.Event;
 import com.travels.backend.model.EventType;
 import com.travels.backend.service.EventService;
@@ -13,6 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +26,25 @@ import java.util.Map;
 @Slf4j
 public class AnalyticsController {
 
+    private static final DateTimeFormatter[] EVENT_DATE_TIME_FORMATTERS = {
+            DateTimeFormatter.ISO_LOCAL_DATE_TIME,
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+    };
+
     private final EventService eventService;
     private final PackageService packageService;
+
+    private static LocalDateTime parseQueryDateTime(String value, String paramName) {
+        for (DateTimeFormatter formatter : EVENT_DATE_TIME_FORMATTERS) {
+            try {
+                return LocalDateTime.parse(value, formatter);
+            } catch (DateTimeParseException ignored) {
+                // probar siguiente formato
+            }
+        }
+        throw new InvalidOperationException(
+                "Formato de fecha inválido para " + paramName + ". Use ISO-8601, por ejemplo 2025-01-15T10:30:00");
+    }
 
     @PostMapping("/packages/{packageId}/click")
     public ResponseEntity<Event> recordPackageClick(
@@ -82,9 +102,11 @@ public class AnalyticsController {
         if (startDate != null && endDate != null) {
             events = eventService.getEventsByDateRange(
                     packageId,
-                    LocalDateTime.parse(startDate),
-                    LocalDateTime.parse(endDate)
+                    parseQueryDateTime(startDate, "startDate"),
+                    parseQueryDateTime(endDate, "endDate")
             );
+        } else if (startDate != null || endDate != null) {
+            throw new InvalidOperationException("Debe enviar startDate y endDate juntos, o ninguno");
         } else {
             events = eventService.getEventsByPackage(packageId);
         }

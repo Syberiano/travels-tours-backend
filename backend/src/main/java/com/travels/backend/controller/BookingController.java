@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.travels.backend.dto.BookingDTO;
 import com.travels.backend.dto.BookingRequestDTO;
+import com.travels.backend.exception.ResourceNotFoundException;
 import com.travels.backend.model.BookingStatus;
+import com.travels.backend.model.UserRole;
 import com.travels.backend.service.BookingService;
 import com.travels.backend.util.SecurityUtil;
 
@@ -49,6 +51,11 @@ public class BookingController {
     public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id) {
         log.info("Obteniendo reserva con ID: {}", id);
         var booking = bookingService.getBookingById(id);
+        var current = SecurityUtil.getCurrentUser();
+        if (current.getRole() == UserRole.CLIENTE
+                && !booking.getUser().getId().equals(current.getId())) {
+            throw new ResourceNotFoundException("Reserva no encontrada");
+        }
         return ResponseEntity.ok(bookingService.convertToDTO(booking));
     }
 

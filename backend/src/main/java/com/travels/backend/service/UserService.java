@@ -42,6 +42,23 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    /**
+     * Registro desde {@code /api/auth/register}: siempre crea rol CLIENTE.
+     * Evita que un cliente se auto-asigne ADMIN o ASESOR manipulando el JSON.
+     */
+    public User registerPublicUser(UserRequestDTO dto) {
+        UserRequestDTO safe = UserRequestDTO.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .password(dto.getPassword())
+                .phone(dto.getPhone())
+                .profileImage(dto.getProfileImage())
+                .bio(dto.getBio())
+                .role(UserRole.CLIENTE)
+                .build();
+        return registerUser(safe);
+    }
+
     public User registerUser(UserRequestDTO dto) {
         log.info("Registrando nuevo usuario: {}", dto.getEmail());
 

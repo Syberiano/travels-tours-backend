@@ -3,6 +3,7 @@ package com.travels.backend.controller;
 import com.travels.backend.dto.AuthLoginDTO;
 import com.travels.backend.dto.AuthResponseDTO;
 import com.travels.backend.dto.UserRequestDTO;
+import com.travels.backend.exception.InvalidOperationException;
 import com.travels.backend.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,18 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<AuthResponseDTO> refreshToken(@RequestHeader("Authorization") String token) {
-        String refreshToken = token.replace("Bearer ", "");
+    public ResponseEntity<AuthResponseDTO> refreshToken(
+            @RequestHeader(value = "Authorization", required = false) String authorization,
+            @RequestHeader(value = "X-Refresh-Token", required = false) String refreshHeader) {
+        String refreshToken;
+        if (refreshHeader != null && !refreshHeader.isBlank()) {
+            refreshToken = refreshHeader.startsWith("Bearer ") ? refreshHeader.substring(7) : refreshHeader;
+        } else if (authorization != null && authorization.startsWith("Bearer ")) {
+            refreshToken = authorization.substring(7);
+        } else {
+            throw new InvalidOperationException(
+                    "Envía el refresh token en Authorization: Bearer <token> o en la cabecera X-Refresh-Token");
+        }
         log.info("Renovando token de acceso");
         return ResponseEntity.ok(authService.refreshToken(refreshToken));
     }

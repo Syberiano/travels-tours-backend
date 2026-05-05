@@ -2,12 +2,12 @@ package com.travels.backend.config;
 
 import com.travels.backend.security.JwtAuthenticationEntryPoint;
 import com.travels.backend.security.JwtAuthenticationFilter;
+import com.travels.backend.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,6 +22,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -30,8 +31,6 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,7 +43,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           JwtTokenProvider tokenProvider,
+                                           UserDetailsService userDetailsService) throws Exception {
+
         http
             .csrf(csrf -> csrf.disable())
             .exceptionHandling(exception -> exception
@@ -55,12 +57,18 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/contacts/**").permitAll()
                 .requestMatchers("/api/packages/approved").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/packages/recent").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/packages/top-rated").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/packages/destination/**").permitAll()
                 .requestMatchers("/api/blogs/approved").permitAll()
                 .requestMatchers("/api/reviews/package/**").permitAll()
+                .requestMatchers("/api/analytics/packages/*/click").permitAll()
                 .anyRequest().authenticated())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .userDetailsService(userDetailsService)
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(
+                new JwtAuthenticationFilter(tokenProvider, userDetailsService),
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }

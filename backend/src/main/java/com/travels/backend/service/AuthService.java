@@ -27,7 +27,7 @@ public class AuthService {
     public AuthResponseDTO register(UserRequestDTO dto) {
         log.info("Registrando nuevo usuario: {}", dto.getEmail());
 
-        User user = userService.registerUser(dto);
+        User user = userService.registerPublicUser(dto);
 
         String accessToken = tokenProvider.generateToken(user);
         String refreshToken = tokenProvider.generateRefreshToken(user);
