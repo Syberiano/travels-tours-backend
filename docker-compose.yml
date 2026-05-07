@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16
+    container_name: travels_db
+    environment:
+      POSTGRES_DB: travels_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d travels_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      default:
+        aliases:
+          - db
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: travels_backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/travels_db?reWriteBatchedInserts=true
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      API_SERVER_URL: http://localhost:8080
+      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970337336763979244226452948404D635166546A576E5A7234753778214125442A
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
