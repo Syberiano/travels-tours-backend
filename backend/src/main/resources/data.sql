@@ -17,5 +17,5 @@ INSERT INTO blogs (title, content, featured_image, author_id, status, created_at
 ('Los Mejores Destinos para 2024', 'Descubre los destinos más fascinantes del año...', 'https://example.com/image1.jpg', 2, 'APPROVED', NOW(), NOW(), NOW(), 150),
 ('Consejos para Viajar con Presupuesto', 'Cómo disfrutar de viajes increíbles sin gastar mucho...', 'https://example.com/image2.jpg', 2, 'APPROVED', NOW(), NOW(), NOW(), 320);
 
--- Nota: Las contraseñas son: "password123" encriptadas con BCrypt
+-- Nota: Las contraseñas son: "password123" encriptadas con BCrypt AHORA NO APLICA YA QUE SE QUIERE DESHABILITAR EL HASH
 -- Puedes cambiar las contraseñas según necesites
