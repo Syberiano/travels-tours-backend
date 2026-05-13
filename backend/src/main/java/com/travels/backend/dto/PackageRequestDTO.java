@@ -1,5 +1,6 @@
 package com.travels.backend.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,12 @@ public class PackageRequestDTO {
 
     @NotBlank(message = "El destino es obligatorio")
     private String destination;
+
+    @Min(value = 1, message = "La duración en días debe ser al menos 1")
+    private int durationDays;
+
+    @Min(value = 1, message = "El máximo de participantes debe ser al menos 1")
+    private int maxParticipants;
 
     private String itinerary;
 

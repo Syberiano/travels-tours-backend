@@ -22,6 +22,10 @@ public class PackageDTO {
 
     private String destination;
 
+    private int durationDays;
+
+    private int maxParticipants;
+
     private String itinerary;
 
     private String images;

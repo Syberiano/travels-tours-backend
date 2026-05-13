@@ -32,6 +32,8 @@ public class PackageService {
                 .description(dto.getDescription())
                 .price(dto.getPrice())
                 .destination(dto.getDestination())
+                .durationDays(dto.getDurationDays())
+                .maxParticipants(dto.getMaxParticipants())
                 .itinerary(dto.getItinerary())
                 .images(dto.getImages())
                 .status(PackageStatus.PENDING) // Regla de negocio: inicia siempre en PENDING
@@ -71,6 +73,8 @@ public class PackageService {
         travelPackage.setDescription(dto.getDescription());
         travelPackage.setPrice(dto.getPrice());
         travelPackage.setDestination(dto.getDestination());
+        travelPackage.setDurationDays(dto.getDurationDays());
+        travelPackage.setMaxParticipants(dto.getMaxParticipants());
         travelPackage.setItinerary(dto.getItinerary());
         travelPackage.setImages(dto.getImages());
         return packageRepository.save(travelPackage);
@@ -115,7 +119,10 @@ public class PackageService {
                 .description(travelPackage.getDescription())
                 .price(travelPackage.getPrice())
                 .destination(travelPackage.getDestination())
+                .durationDays(travelPackage.getDurationDays())
+                .maxParticipants(travelPackage.getMaxParticipants())
                 .itinerary(travelPackage.getItinerary())
+                .images(travelPackage.getImages())
                 .status(travelPackage.getStatus())
                 .averageRating(travelPackage.getAverageRating())
                 .build();

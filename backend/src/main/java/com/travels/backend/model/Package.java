@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -34,6 +36,16 @@ public class Package {
     @NotBlank(message = "El destino es obligatorio")
     @Column(nullable = false)
     private String destination;
+
+    @ColumnDefault("7")
+    @Column(name = "duration_days", nullable = false)
+    @lombok.Builder.Default
+    private int durationDays = 7;
+
+    @ColumnDefault("30")
+    @Column(name = "max_participants", nullable = false)
+    @lombok.Builder.Default
+    private int maxParticipants = 30;
 
     @Column(columnDefinition = "TEXT")
     private String itinerary;

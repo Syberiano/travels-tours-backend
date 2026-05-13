@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,6 +21,8 @@ public class BookingDTO {
     private PackageDTO travelPackage;
 
     private BookingStatus status;
+
+    private LocalDate travelDate;
 
     private Double totalPrice;
 

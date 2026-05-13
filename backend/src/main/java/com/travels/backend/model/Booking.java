@@ -3,6 +3,8 @@ package com.travels.backend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,6 +33,10 @@ public class Booking {
     @Column(nullable = false)
     @lombok.Builder.Default
     private BookingStatus status = BookingStatus.PENDING;
+
+    @NotNull(message = "La fecha del viaje es obligatoria")
+    @Column(name = "travel_date", nullable = false)
+    private LocalDate travelDate;
 
     private Double totalPrice;
 
