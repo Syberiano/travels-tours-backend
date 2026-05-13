@@ -17,6 +17,7 @@ import com.travels.backend.model.PackageStatus;
 import com.travels.backend.model.User;
 import com.travels.backend.model.UserRole;
 import com.travels.backend.repository.BookingRepository;
+import com.travels.backend.service.EmailService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class BookingService {
     private final PackageService packageService;
     private final UserService userService;
     private final EventService eventService;
+    private final EmailService emailService;
 
     public Booking createBooking(User user, BookingRequestDTO dto) {
         log.info("Creando reserva para usuario: {} y paquete: {}", user.getId(), dto.getPackageId());
@@ -80,6 +82,7 @@ public class BookingService {
         return bookingRepository.findByStatus(status);
     }
 
+    /*
     public Booking updateBookingStatus(Long id, BookingStatus newStatus) {
         log.info("Actualizando estado de reserva con ID: {} a {}", id, newStatus);
 
@@ -101,7 +104,39 @@ public class BookingService {
 
         return bookingRepository.save(booking);
     }
+*/
+    
+    public Booking updateBookingStatus(Long id, BookingStatus newStatus) {
+        log.info("Actualizando estado de reserva con ID: {} a {}", id, newStatus);
 
+        Booking booking = getBookingById(id);
+        BookingStatus currentStatus = booking.getStatus();
+
+        if (!isValidStatusTransition(currentStatus, newStatus)) {
+            throw new InvalidOperationException(
+                    "No se puede pasar de " + currentStatus + " a " + newStatus
+            );
+        }
+
+        booking.setStatus(newStatus);
+
+        if (newStatus.equals(BookingStatus.COMPLETED)) {
+            booking.setCompletedAt(LocalDateTime.now());
+        }
+
+        Booking savedBooking = bookingRepository.save(booking);
+
+        if (newStatus.equals(BookingStatus.CONFIRMED)) {
+            try {
+                emailService.enviarConfirmacionReserva(savedBooking);
+            } catch (Exception e) {
+                log.error("No se pudo enviar el correo de confirmación: {}", e.getMessage());
+            }
+        }
+
+        return savedBooking;
+    }
+    
     private boolean isValidStatusTransition(BookingStatus from, BookingStatus to) {
         return switch (from) {
             case PENDING -> to.equals(BookingStatus.CONFIRMED) || to.equals(BookingStatus.CANCELLED);
