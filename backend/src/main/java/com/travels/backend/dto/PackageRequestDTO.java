@@ -26,7 +26,7 @@ public class PackageRequestDTO {
     @NotBlank(message = "El destino es obligatorio")
     private String destination;
 
-    @Min(value = 1, message = "La duración en días debe ser al menos 1")
+    @Min(value = 0, message = "La duración en días no puede ser negativa")
     private int durationDays;
 
     @Min(value = 1, message = "El máximo de participantes debe ser al menos 1")

@@ -7,10 +7,13 @@ import com.travels.backend.model.PackageStatus;
 import com.travels.backend.model.UserRole;
 import com.travels.backend.service.PackageService;
 import com.travels.backend.util.SecurityUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,10 +59,11 @@ public class PackageController {
     }
 
     @GetMapping("/approved")
-    public ResponseEntity<List<PackageDTO>> getApprovedPackages() {
-        log.info("Obteniendo paquetes aprobados");
-        var packages = packageService.getApprovedPackages();
-        return ResponseEntity.ok(packageService.convertToDTO(packages));
+    @Operation(summary = "Paquetes aprobados (paginado)", description = "Query params estándar de Spring: `page` (0-based), `size`, opcionalmente `sort`.")
+    public ResponseEntity<Page<PackageDTO>> getApprovedPackages(Pageable pageable) {
+        log.info("Obteniendo paquetes aprobados (page={}, size={})", pageable.getPageNumber(), pageable.getPageSize());
+        var page = packageService.getApprovedPackages(pageable);
+        return ResponseEntity.ok(page.map(packageService::convertToDTO));
     }
 
     @GetMapping("/recent")

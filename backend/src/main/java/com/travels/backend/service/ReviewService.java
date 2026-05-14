@@ -35,9 +35,10 @@ public class ReviewService {
             throw new InvalidOperationException("Solo el usuario que realizó la reserva puede dejar una reseña");
         }
 
-        // Validar que la reserva está completada
-        if (!booking.getStatus().equals(BookingStatus.COMPLETED)) {
-            throw new InvalidOperationException("Solo se pueden reseñar reservas completadas");
+        // Reseña permitida tras pago confirmado o al completar el viaje
+        if (!booking.getStatus().equals(BookingStatus.COMPLETED)
+                && !booking.getStatus().equals(BookingStatus.CONFIRMED)) {
+            throw new InvalidOperationException("Solo se pueden reseñar reservas confirmadas o completadas");
         }
 
         // Validar que no existe reseña previa para esta reserva

@@ -34,6 +34,20 @@ public class BookingService {
     private final EventService eventService;
     private final EmailService emailService;
 
+    /**
+     * Simula la confirmación de pago del cliente: solo el dueño puede confirmar una reserva PENDING.
+     */
+    public Booking confirmBookingPayment(User user, Long bookingId) {
+        Booking booking = getBookingById(bookingId);
+        if (!booking.getUser().getId().equals(user.getId())) {
+            throw new ResourceNotFoundException("Reserva no encontrada");
+        }
+        if (!booking.getStatus().equals(BookingStatus.PENDING)) {
+            throw new InvalidOperationException("Solo se pueden confirmar pagos de reservas pendientes");
+        }
+        return updateBookingStatus(bookingId, BookingStatus.CONFIRMED);
+    }
+
     public Booking createBooking(User user, BookingRequestDTO dto) {
         log.info("Creando reserva para usuario: {} y paquete: {}", user.getId(), dto.getPackageId());
 

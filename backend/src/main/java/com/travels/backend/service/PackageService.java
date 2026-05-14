@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -53,6 +56,10 @@ public class PackageService {
 
     public List<Package> getApprovedPackages() {
         return packageRepository.findByStatus(PackageStatus.APPROVED);
+    }
+
+    public Page<Package> getApprovedPackages(Pageable pageable) {
+        return packageRepository.findByStatus(PackageStatus.APPROVED, pageable);
     }
 
     public List<Package> getRecentPackages() {
