@@ -25,6 +25,10 @@ public class SecurityUtil {
         return user != null && user.getRole() == UserRole.ASESOR;
     }
 
+    public static boolean isCurrentUserStaff() {
+        return isCurrentUserAdmin() || isCurrentUserAsesor();
+    }
+
     public static boolean isCurrentUserCliente() {
         User user = getCurrentUser();
         return user != null && user.getRole() == UserRole.CLIENTE;

@@ -84,6 +84,8 @@ public class PackageService {
         travelPackage.setMaxParticipants(dto.getMaxParticipants());
         travelPackage.setItinerary(dto.getItinerary());
         travelPackage.setImages(dto.getImages());
+        travelPackage.setStatus(PackageStatus.PENDING);
+        travelPackage.setApprovedAt(null);
         return packageRepository.save(travelPackage);
     }
 

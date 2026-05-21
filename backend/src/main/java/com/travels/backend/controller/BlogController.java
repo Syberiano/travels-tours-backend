@@ -48,6 +48,7 @@ public class BlogController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ASESOR')")
     public ResponseEntity<List<BlogDTO>> getAllBlogs() {
         log.info("Obteniendo todos los blogs");
         var blogs = blogService.getAllBlogs();
@@ -104,10 +105,11 @@ public class BlogController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ASESOR')")
     public ResponseEntity<Void> deleteBlog(@PathVariable Long id) {
         log.info("Eliminando blog con ID: {}", id);
-        blogService.deleteBlog(id);
+        var actor = SecurityUtil.getCurrentUser();
+        blogService.deleteBlog(id, actor);
         return ResponseEntity.noContent().build();
     }
 }

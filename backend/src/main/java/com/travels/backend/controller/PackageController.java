@@ -44,8 +44,8 @@ public class PackageController {
         log.info("Obteniendo paquete con ID: {}", id);
         var travelPackage = packageService.getPackageById(id);
         // Solo devolver paquetes aprobados a usuarios no autenticados
-        if (!travelPackage.getStatus().equals(PackageStatus.APPROVED) &&
-            !SecurityUtil.isCurrentUserAdmin()) {
+        if (!travelPackage.getStatus().equals(PackageStatus.APPROVED)
+                && !SecurityUtil.isCurrentUserStaff()) {
             throw new ResourceNotFoundException("Paquete no encontrado");
         }
         return ResponseEntity.ok(packageService.convertToDTO(travelPackage));
@@ -88,7 +88,7 @@ public class PackageController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ASESOR')")
+    @PreAuthorize("hasRole('ASESOR') or hasRole('ADMIN')")
     public ResponseEntity<PackageDTO> updatePackage(
             @PathVariable Long id,
             @Valid @RequestBody PackageRequestDTO dto) {

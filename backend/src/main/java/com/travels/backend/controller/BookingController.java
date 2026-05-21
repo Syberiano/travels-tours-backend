@@ -49,7 +49,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('CLIENTE') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('CLIENTE') or hasRole('ADMIN') or hasRole('ASESOR')")
     public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id) {
         log.info("Obteniendo reserva con ID: {}", id);
         var booking = bookingService.getBookingById(id);
@@ -79,7 +79,7 @@ public class BookingController {
     }
 
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ASESOR')")
     public ResponseEntity<List<BookingDTO>> getBookingsByStatus(@PathVariable BookingStatus status) {
         log.info("Obteniendo reservas con estado: {}", status);
         var bookings = bookingService.getBookingsByStatus(status);
@@ -87,7 +87,7 @@ public class BookingController {
     }
 
     @PatchMapping("/{id}/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ASESOR')")
     public ResponseEntity<BookingDTO> updateBookingStatus(
             @PathVariable Long id,
             @PathVariable BookingStatus status) {
@@ -97,7 +97,7 @@ public class BookingController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ASESOR')")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
         log.info("Eliminando reserva con ID: {}", id);
         bookingService.deleteBooking(id);

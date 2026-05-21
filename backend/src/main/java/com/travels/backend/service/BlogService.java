@@ -60,7 +60,7 @@ public class BlogService {
         if (viewer == null) {
             return false;
         }
-        if (viewer.getRole().equals(UserRole.ADMIN)) {
+        if (viewer.getRole().equals(UserRole.ADMIN) || viewer.getRole().equals(UserRole.ASESOR)) {
             return true;
         }
         return blog.getAuthor().getId().equals(viewer.getId());
@@ -91,13 +91,17 @@ public class BlogService {
             throw new InvalidOperationException("Solo el autor puede editar este blog");
         }
 
-        if (!blog.getStatus().equals(ContentStatus.PENDING)) {
-            throw new InvalidOperationException("Solo se pueden editar blogs en estado PENDING");
+        ContentStatus status = blog.getStatus();
+        if (!status.equals(ContentStatus.PENDING) && !status.equals(ContentStatus.REJECTED)) {
+            throw new InvalidOperationException(
+                    "Solo se pueden editar blogs pendientes o rechazados");
         }
 
         blog.setTitle(dto.getTitle());
         blog.setContent(dto.getContent());
         blog.setFeaturedImage(dto.getFeaturedImage());
+        blog.setStatus(ContentStatus.PENDING);
+        blog.setApprovedAt(null);
 
         return blogRepository.save(blog);
     }
@@ -131,8 +135,13 @@ public class BlogService {
         return blogRepository.save(blog);
     }
 
-    public void deleteBlog(Long id) {
+    public void deleteBlog(Long id, User actor) {
         log.info("Eliminando blog con ID: {}", id);
+        Blog blog = getBlogById(id);
+        if (actor.getRole() == UserRole.ASESOR
+                && !blog.getAuthor().getId().equals(actor.getId())) {
+            throw new InvalidOperationException("Solo puedes eliminar tus propios blogs");
+        }
         blogRepository.deleteById(id);
     }
 
