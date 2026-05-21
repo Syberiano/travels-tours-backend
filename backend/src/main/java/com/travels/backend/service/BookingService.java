@@ -1,5 +1,6 @@
 package com.travels.backend.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -59,6 +60,12 @@ public class BookingService {
 
         if (!travelPackage.getStatus().equals(PackageStatus.APPROVED)) {
             throw new InvalidOperationException("Solo se pueden reservar paquetes aprobados");
+        }
+
+        LocalDate hoy = LocalDate.now();
+        if (dto.getTravelDate() == null || dto.getTravelDate().isBefore(hoy)) {
+            throw new InvalidOperationException(
+                    "La fecha del viaje no puede ser anterior a la fecha actual del servidor");
         }
 
         Booking booking = Booking.builder()

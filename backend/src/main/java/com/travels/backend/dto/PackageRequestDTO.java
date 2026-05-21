@@ -1,5 +1,7 @@
 package com.travels.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -34,5 +36,6 @@ public class PackageRequestDTO {
 
     private String itinerary;
 
+    @JsonAlias({ "image", "imageUrl" })
     private String images;
 }

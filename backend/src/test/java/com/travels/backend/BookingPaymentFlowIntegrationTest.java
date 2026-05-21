@@ -118,6 +118,41 @@ class BookingPaymentFlowIntegrationTest {
     }
 
     @Test
+    void createBooking_rejectsTravelDateBeforeToday() throws Exception {
+        String email = "past-date-" + System.nanoTime() + "@test.com";
+        String password = "secret123";
+
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(java.util.Map.of(
+                                "name", "Cliente Fecha",
+                                "email", email,
+                                "password", password))))
+                .andExpect(status().isCreated());
+
+        String loginJson = mockMvc.perform(post("/api/auth/login")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(java.util.Map.of(
+                                "email", email,
+                                "password", password))))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        String token = objectMapper.readTree(loginJson).path("token").asText();
+
+        mockMvc.perform(post("/api/bookings")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(java.util.Map.of(
+                                "packageId", approvedPackageId,
+                                "travelDate", LocalDate.now().minusDays(1).toString(),
+                                "numberOfParticipants", 1))))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void badRequest_validationResponse_hasMessageAndStatus() throws Exception {
         mockMvc.perform(post("/api/auth/register")
                         .contentType(APPLICATION_JSON)
