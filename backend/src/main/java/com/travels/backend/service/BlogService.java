@@ -92,9 +92,11 @@ public class BlogService {
         }
 
         ContentStatus status = blog.getStatus();
-        if (!status.equals(ContentStatus.PENDING) && !status.equals(ContentStatus.REJECTED)) {
+        if (!status.equals(ContentStatus.PENDING)
+                && !status.equals(ContentStatus.REJECTED)
+                && !status.equals(ContentStatus.APPROVED)) {
             throw new InvalidOperationException(
-                    "Solo se pueden editar blogs pendientes o rechazados");
+                    "No se puede editar este blog en su estado actual");
         }
 
         blog.setTitle(dto.getTitle());
