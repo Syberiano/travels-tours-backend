@@ -28,8 +28,8 @@ public class BlogService {
     public Blog createBlog(User author, BlogRequestDTO dto) {
         log.info("Creando blog de autor: {}", author.getId());
 
-        if (author.getRole() != UserRole.ASESOR && author.getRole() != UserRole.ADMIN) {
-            throw new InvalidOperationException("Solo los asesores y admins pueden crear blogs");
+        if (author.getRole() != UserRole.ASESOR) {
+            throw new InvalidOperationException("Solo los asesores pueden crear blogs");
         }
 
         Blog blog = Blog.builder()
@@ -82,13 +82,17 @@ public class BlogService {
         return blogRepository.findByAuthorId(authorId);
     }
 
-    public Blog updateBlog(Long id, BlogRequestDTO dto, User author) {
+    public Blog updateBlog(Long id, BlogRequestDTO dto, User actor) {
         log.info("Actualizando blog con ID: {}", id);
 
         Blog blog = getBlogById(id);
 
-        if (!blog.getAuthor().getId().equals(author.getId())) {
-            throw new InvalidOperationException("Solo el autor puede editar este blog");
+        if (actor.getRole() == UserRole.ASESOR) {
+            if (!blog.getAuthor().getId().equals(actor.getId())) {
+                throw new InvalidOperationException("Solo el autor puede editar este blog");
+            }
+        } else if (actor.getRole() != UserRole.ADMIN) {
+            throw new InvalidOperationException("No tienes permiso para editar blogs");
         }
 
         ContentStatus status = blog.getStatus();

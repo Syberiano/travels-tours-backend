@@ -27,7 +27,7 @@ public class BlogController {
     private final BlogService blogService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ASESOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ASESOR')")
     public ResponseEntity<BlogDTO> createBlog(@Valid @RequestBody BlogRequestDTO dto) {
         log.info("Creando nuevo blog");
         var author = SecurityUtil.getCurrentUser();
