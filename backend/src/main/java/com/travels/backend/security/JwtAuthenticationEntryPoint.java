@@ -28,7 +28,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         Map<String, Object> body = new HashMap<>();
-        body.put("message", "Acceso no autorizado. Token requerido o inválido. | Nota de INddestable: Revisa que si estes usando el Token Correcto");
+        body.put("message", "Acceso no autorizado. Token requerido o inválido.");
         body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
 
         ObjectMapper mapper = new ObjectMapper();

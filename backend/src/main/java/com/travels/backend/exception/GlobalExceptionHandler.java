@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<Map<String, Object>> handleUnauthorized(UnauthorizedException ex, WebRequest request) {
-        return createResponse(HttpStatus.UNAUTHORIZED, "No autorizado | Nota de INddestable: posiblemente token invalido UwU", ex.getMessage(), request);
+        return createResponse(HttpStatus.UNAUTHORIZED, "No autorizado", ex.getMessage(), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
         return createResponse(
                 HttpStatus.UNSUPPORTED_MEDIA_TYPE,
                 "Tipo de contenido no soportado",
-                "Usa Content-Type: application/json. | Nota de INddestable: Revisa como envias la informacion y que sea JSON",
+                "Usa Content-Type: application/json",
                 request
         );
     }
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
         return createResponse(
                 HttpStatus.BAD_REQUEST,
                 "JSON inválido o vacío",
-                "Revisa el cuerpo de la petición. | Nota de INddestable: Revisa como envias el JSON (y que si lo envies, duh)",
+                "Revisa el cuerpo de la petición",
                 request
         );
     }
@@ -98,7 +98,7 @@ public class GlobalExceptionHandler {
         return createResponse(
                 HttpStatus.UNAUTHORIZED,
                 "Autenticación requerida",
-                "Token requerido o inválido | Obtenido en /auth/login",
+                "Token Expirado",
                 request
         );
     }
@@ -120,7 +120,7 @@ public class GlobalExceptionHandler {
         return createResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Error interno del servidor",
-                "Ha ocurrido un error inesperado | Nota de INddestable: Revisa que la peticion si sea correcta (GET, POST, PUT ...)",
+                "Ha ocurrido un error inesperado",
                 request
         );
     }
